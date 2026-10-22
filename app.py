@@ -189,7 +189,7 @@ app = dash.Dash(
     title="Slothstep – tiny steps for big tasks",
 )
 
-app.index_string = app.index_string.replace(
+app.index_string = app.index_string.replace("<html>", '<html data-bs-theme="dark">').replace(
     "</head>",
     """<style>
     html { font-size: 20px; }
@@ -201,7 +201,7 @@ app.index_string = app.index_string.replace(
     .hero h1 { font-weight: 800; font-size: 3.8rem;
         background: linear-gradient(90deg, #f97316, #10b981);
         -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .main-card { border: 0; border-radius: 1.25rem; background: rgba(255,255,255,.85);
+    .main-card { border: 0; border-radius: 1.25rem; background: rgba(30,30,34,.85); color: #f1f1f1;
         backdrop-filter: blur(8px); }
     .btn { border: 0 !important; color: #fff !important; font-weight: 600;
         background: linear-gradient(90deg, #f97316, #10b981) !important;
@@ -210,16 +210,22 @@ app.index_string = app.index_string.replace(
     .example-btn { white-space: normal; text-align: left; font-weight: 500;
         background: linear-gradient(90deg, #f97316, #10b981) !important;
         background-size: 200% 100% !important; }
-    .step-card { border: 0; border-radius: 1rem; background: rgba(255,255,255,.9);
+    .step-card { border: 0; border-radius: 1rem; background: rgba(34,34,40,.92); color: #f1f1f1;
         transition: transform .15s, box-shadow .15s; }
-    .step-card:hover { transform: translateY(-3px); box-shadow: 0 .6rem 1.2rem rgba(180,90,20,.18) !important; }
+    .step-card:hover { transform: translateY(-3px); box-shadow: 0 .6rem 1.2rem rgba(249,115,22,.25) !important; }
     .step-first { border-left: 6px solid #f97316; }
     .step-number { width: 2.6rem; height: 2.6rem; border-radius: 50%; color: #fff;
         display: flex; align-items: center; justify-content: center; font-weight: 700;
         background: linear-gradient(135deg, #f97316, #10b981); }
     .step-label { font-size: 1.35rem; }
     .lead { font-size: 1.4rem; }
-    textarea { font-size: 1.3rem !important; }
+    textarea { font-size: 1.3rem !important; background: #16161a !important; color: #f1f1f1 !important; border: 1px solid #3a3a44 !important; }
+    textarea::placeholder { color: #8d8d99 !important; }
+    .text-muted { color: #a5a5b0 !important; }
+    .hero .lead { color: #c9c9d1 !important; }
+    .form-check-input { background-color: #2a2a31; border-color: #5a5a66; }
+    .form-check-input:checked { background-color: #10b981; border-color: #10b981; }
+    body, h4 { color: #f1f1f1; }
     </style></head>""",
 )
 
