@@ -192,12 +192,13 @@ app = dash.Dash(
 app.index_string = app.index_string.replace(
     "</head>",
     """<style>
+    html { font-size: 20px; }
     body {
         background: linear-gradient(135deg, #f97316, #10b981);
         background-size: 300% 300%; animation: drift 18s ease infinite; min-height: 100vh;
     }
     @keyframes drift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-    .hero h1 { font-weight: 800; font-size: 3.2rem;
+    .hero h1 { font-weight: 800; font-size: 3.8rem;
         background: linear-gradient(90deg, #f97316, #10b981);
         -webkit-background-clip: text; background-clip: text; color: transparent; }
     .main-card { border: 0; border-radius: 1.25rem; background: rgba(255,255,255,.85);
@@ -216,7 +217,9 @@ app.index_string = app.index_string.replace(
     .step-number { width: 2.6rem; height: 2.6rem; border-radius: 50%; color: #fff;
         display: flex; align-items: center; justify-content: center; font-weight: 700;
         background: linear-gradient(135deg, #f97316, #10b981); }
-    .step-label { font-size: 1.1rem; }
+    .step-label { font-size: 1.35rem; }
+    .lead { font-size: 1.4rem; }
+    textarea { font-size: 1.3rem !important; }
     </style></head>""",
 )
 
@@ -280,7 +283,7 @@ app.layout = dbc.Container(
         dcc.Loading(html.Div(id="result"), type="dot", color="#f97316"),
         html.Div(className="pb-5"),
     ],
-    style={"maxWidth": "720px"},
+    style={"maxWidth": "820px"},
 )
 
 
