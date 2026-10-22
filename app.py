@@ -214,7 +214,7 @@ app.index_string = app.index_string.replace(
         { background: linear-gradient(135deg, #ffe4f1, #e3efff) fixed !important; }
     html[data-mantine-color-scheme="dark"] body
         { background: linear-gradient(135deg, #1a0f18, #0e1424) fixed !important; }
-    .step-card { background: #000 !important; color: #fff !important; border-color: #000 !important;
+    .step-card { background: #2563eb !important; color: #fff !important; border-color: #2563eb !important;
         border-radius: 0 !important; transition: transform .15s, box-shadow .15s; }
     .step-card:hover { transform: translateY(-3px); box-shadow: 0 .8rem 1.6rem rgba(236,72,153,.25); }
     </style></head>""",
