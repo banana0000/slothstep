@@ -296,11 +296,14 @@ app.layout = dmc.MantineProvider(
                                     dmc.Button(
                                         text,
                                         id={"type": "example", "index": i},
-                                        variant="gradient",
-                                        gradient=GRADIENT_REV,
+                                        variant="filled",
+                                        color="pink",
                                         size="md",
                                         radius="xl",
-                                        styles={"label": {"whiteSpace": "normal"}},
+                                        styles={
+                                            "root": {"border": "none"},
+                                            "label": {"whiteSpace": "normal"},
+                                        },
                                     )
                                     for i, text in enumerate(EXAMPLES)
                                 ],
