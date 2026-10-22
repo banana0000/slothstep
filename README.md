@@ -21,3 +21,7 @@ Set `OLLAMA_MODEL` and `OLLAMA_URL` to change the model or server.
 
 Render's free web service cannot run a model, so point it at a hosted open-weight model instead. Set
 `LLM_BASE_URL` (e.g. `https://api.groq.com/openai/v1`), `LLM_API_KEY` and `OLLAMA_MODEL` (the model id) on the service.
+
+## Demo mode
+
+Set `DEMO_MODE=true` to serve canned plans without any model. The Render Blueprint does this by default so the free tier works.

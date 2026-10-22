@@ -9,11 +9,13 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import Input, Output, State, dcc, html
 
-MODEL = os.environ.get("OLLAMA_MODEL", "gemma3:4b")
+MODEL = os.environ.get("OLLAMA_MODEL") or "gemma3:4b"
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
 # Optional: any OpenAI-compatible host serving an open-weight model (used instead of Ollama).
 LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "").rstrip("/")
 LLM_API_KEY = os.environ.get("LLM_API_KEY", "")
+# Demo mode: canned plans, no model needed (e.g. on a free host).
+DEMO_MODE = os.environ.get("DEMO_MODE", "").lower() in {"1", "true", "yes"}
 EXAMPLES = [
     "I have to clean the whole flat because guests arrive on Saturday",
     "I need to write a long, difficult email to my boss",
@@ -21,7 +23,35 @@ EXAMPLES = [
 ]
 
 
+DEMO_PLANS = {
+    EXAMPLES[0]: [
+        ("Pick up everything that is on the floor and put it on the sofa.", 2),
+        ("Wipe the kitchen counter and clear the sink.", 10),
+        ("Vacuum the main room and take out the trash.", 15),
+    ],
+    EXAMPLES[1]: [
+        ("Write one sentence: what do you need from your boss?", 2),
+        ("Add two or three bullet points of context, nothing more.", 5),
+        ("Read it once out loud, fix the tone, and hit send.", 8),
+    ],
+    EXAMPLES[2]: [
+        ("Create one folder called 'To sort' on your desktop.", 1),
+        ("Drag everything that is lying around into it.", 5),
+        ("Open it and sort just the first 10 files, then stop.", 10),
+    ],
+}
+DEMO_DEFAULT = [
+    ("Write the task down in one sentence.", 2),
+    ("List the first three things it needs, in any order.", 5),
+    ("Do the smallest one on that list.", 10),
+]
+
+
 def make_plan(task: str, model: str = MODEL, ollama_url: str = OLLAMA_URL) -> list[dict]:
+    if DEMO_MODE:
+        steps = DEMO_PLANS.get(task, DEMO_DEFAULT)
+        return [{"action": a, "minutes": m} for a, m in steps]
+
     prompt = (
         "You are a practical everyday helper. The user describes a task they "
         "are procrastinating on. Break it into exactly 3 short steps to do "
@@ -208,7 +238,9 @@ app.layout = dbc.Container(
         ),
         dcc.Loading(html.Div(id="result"), type="dot", color="#3a9d5d"),
         html.Footer(
-            f"Model: {MODEL} · open weights",
+            "Demo mode: sample plans, no live model. Run it with Ollama for the real thing."
+            if DEMO_MODE
+            else f"Model: {MODEL} · open weights",
             className="text-center text-muted small py-4",
         ),
     ],
