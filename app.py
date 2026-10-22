@@ -11,6 +11,9 @@ from dash import Input, Output, State, dcc, html
 
 MODEL = os.environ.get("OLLAMA_MODEL", "gemma3:4b")
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
+# Optional: any OpenAI-compatible host serving an open-weight model (used instead of Ollama).
+LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "").rstrip("/")
+LLM_API_KEY = os.environ.get("LLM_API_KEY", "")
 EXAMPLES = [
     "I have to clean the whole flat because guests arrive on Saturday",
     "I need to write a long, difficult email to my boss",
@@ -30,34 +33,45 @@ def make_plan(task: str, model: str = MODEL, ollama_url: str = OLLAMA_URL) -> li
         '{"action":"final step","minutes":10}]}'
         f"\n\nTask: {task}"
     )
-    payload = json.dumps(
-        {
+    if LLM_BASE_URL:
+        endpoint = f"{LLM_BASE_URL}/chat/completions"
+        body = {
+            "model": model,
+            "messages": [{"role": "user", "content": prompt}],
+            "response_format": {"type": "json_object"},
+            "temperature": 0.2,
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {LLM_API_KEY}",
+        }
+    else:
+        endpoint = f"{ollama_url.rstrip('/')}/api/chat"
+        body = {
             "model": model,
             "messages": [{"role": "user", "content": prompt}],
             "stream": False,
             "format": "json",
             "options": {"temperature": 0.2},
         }
-    ).encode("utf-8")
+        headers = {"Content-Type": "application/json"}
     request = Request(
-        f"{ollama_url.rstrip('/')}/api/chat",
-        data=payload,
-        headers={"Content-Type": "application/json"},
-        method="POST",
+        endpoint, data=json.dumps(body).encode("utf-8"), headers=headers, method="POST"
     )
 
     try:
         with urlopen(request, timeout=120) as response:
             result = json.loads(response.read().decode("utf-8"))
-        plan = json.loads(result["message"]["content"])["steps"]
+        message = result["choices"][0]["message"] if LLM_BASE_URL else result["message"]
+        plan = json.loads(message["content"])["steps"]
     except HTTPError as exc:
         detail = exc.read().decode("utf-8", errors="replace").strip()
         raise RuntimeError(f"Ollama error ({exc.code}): {detail or exc.reason}") from exc
     except (URLError, TimeoutError) as exc:
         raise RuntimeError(
-            f"Cannot reach Ollama at {ollama_url}. Start it and try again."
+            "Cannot reach the model server. Check it is running and try again."
         ) from exc
-    except (UnicodeDecodeError, json.JSONDecodeError, KeyError, TypeError) as exc:
+    except (UnicodeDecodeError, json.JSONDecodeError, KeyError, IndexError, TypeError) as exc:
         raise RuntimeError("The model did not return a valid plan.") from exc
 
     if (
@@ -194,7 +208,7 @@ app.layout = dbc.Container(
         ),
         dcc.Loading(html.Div(id="result"), type="dot", color="#3a9d5d"),
         html.Footer(
-            f"Model: {MODEL} · Ollama · open weights",
+            f"Model: {MODEL} · open weights",
             className="text-center text-muted small py-4",
         ),
     ],

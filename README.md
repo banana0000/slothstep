@@ -14,6 +14,10 @@ python app.py
 
 Set `OLLAMA_MODEL` and `OLLAMA_URL` to change the model or server.
 
-## Deploy
 
-`render.yaml` defines a web service plus a private Ollama service (Render Blueprint).
+
+
+## Free hosting
+
+Render's free web service cannot run a model, so point it at a hosted open-weight model instead. Set
+`LLM_BASE_URL` (e.g. `https://api.groq.com/openai/v1`), `LLM_API_KEY` and `OLLAMA_MODEL` (the model id) on the service.
