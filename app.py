@@ -280,14 +280,15 @@ app.layout = dmc.MantineProvider(
                                 size="xl",
                                 radius="xl",
                             ),
-                            dmc.Button(
-                                "Break it down for me",
-                                id="go",
-                                size="xl",
-                                radius="xl",
-                                variant="gradient",
-                                gradient=GRADIENT,
-                                fullWidth=True,
+                            dmc.Center(
+                                dmc.Button(
+                                    "Break it down for me",
+                                    id="go",
+                                    size="xl",
+                                    radius=999,
+                                    color="pink",
+                                    variant="filled",
+                                )
                             ),
                             dmc.Text("Try one:", size="md", c="dimmed"),
                             dmc.Group(
