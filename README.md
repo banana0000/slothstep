@@ -24,4 +24,4 @@ Render's free web service cannot run a model, so point it at a hosted open-weigh
 
 ## Demo mode
 
-Set `DEMO_MODE=true` to serve canned plans without any model. The Render Blueprint does this by default so the free tier works.
+Set `DEMO_MODE=true` to serve canned plans without any model (no Ollama needed, works on a free host).
