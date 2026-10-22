@@ -202,11 +202,13 @@ app.index_string = app.index_string.replace(
         -webkit-background-clip: text; background-clip: text; color: transparent; }
     .main-card { border: 0; border-radius: 1.25rem; background: rgba(255,255,255,.85);
         backdrop-filter: blur(8px); }
-    #go { border: 0; font-weight: 600;
-        background: linear-gradient(90deg, #12b886, #3b82f6, #a855f7);
-        background-size: 200% 100%; transition: background-position .4s, transform .15s; }
-    #go:hover { background-position: 100% 0; transform: translateY(-1px); }
-    .example-btn { white-space: normal; text-align: left; border: 1px solid #e3e8f0; }
+    .btn { border: 0 !important; color: #fff !important; font-weight: 600;
+        background: linear-gradient(90deg, #12b886, #3b82f6, #a855f7) !important;
+        background-size: 200% 100% !important; transition: background-position .4s, transform .15s; }
+    .btn:hover { background-position: 100% 0 !important; transform: translateY(-1px); }
+    .example-btn { white-space: normal; text-align: left; font-weight: 500;
+        background: linear-gradient(90deg, #3b82f6, #a855f7, #ec4899) !important;
+        background-size: 200% 100% !important; }
     .step-card { border: 0; border-radius: 1rem; background: rgba(255,255,255,.9);
         transition: transform .15s, box-shadow .15s; }
     .step-card:hover { transform: translateY(-3px); box-shadow: 0 .6rem 1.2rem rgba(80,60,160,.15) !important; }
