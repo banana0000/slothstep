@@ -193,21 +193,21 @@ app.index_string = app.index_string.replace(
     "</head>",
     """<style>
     body {
-        background: linear-gradient(135deg, #e3f7d9, #fff1cc 35%, #ffe0c2 65%, #d6f5e3);
+        background: linear-gradient(135deg, #f97316, #10b981);
         background-size: 300% 300%; animation: drift 18s ease infinite; min-height: 100vh;
     }
     @keyframes drift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
     .hero h1 { font-weight: 800; font-size: 3.2rem;
-        background: linear-gradient(90deg, #f97316, #f59e0b, #84cc16, #10b981);
+        background: linear-gradient(90deg, #f97316, #10b981);
         -webkit-background-clip: text; background-clip: text; color: transparent; }
     .main-card { border: 0; border-radius: 1.25rem; background: rgba(255,255,255,.85);
         backdrop-filter: blur(8px); }
     .btn { border: 0 !important; color: #fff !important; font-weight: 600;
-        background: linear-gradient(90deg, #f97316, #f59e0b, #65a30d, #10b981) !important;
+        background: linear-gradient(90deg, #f97316, #10b981) !important;
         background-size: 200% 100% !important; transition: background-position .4s, transform .15s; }
     .btn:hover { background-position: 100% 0 !important; transform: translateY(-1px); }
     .example-btn { white-space: normal; text-align: left; font-weight: 500;
-        background: linear-gradient(90deg, #10b981, #84cc16, #f59e0b, #f97316) !important;
+        background: linear-gradient(90deg, #f97316, #10b981) !important;
         background-size: 200% 100% !important; }
     .step-card { border: 0; border-radius: 1rem; background: rgba(255,255,255,.9);
         transition: transform .15s, box-shadow .15s; }
@@ -215,9 +215,7 @@ app.index_string = app.index_string.replace(
     .step-first { border-left: 6px solid #f97316; }
     .step-number { width: 2.6rem; height: 2.6rem; border-radius: 50%; color: #fff;
         display: flex; align-items: center; justify-content: center; font-weight: 700;
-        background: linear-gradient(135deg, #f97316, #f59e0b); }
-    .step-card:nth-of-type(2) .step-number { background: linear-gradient(135deg, #f59e0b, #84cc16); }
-    .step-card:nth-of-type(3) .step-number { background: linear-gradient(135deg, #84cc16, #10b981); }
+        background: linear-gradient(135deg, #f97316, #10b981); }
     .step-label { font-size: 1.1rem; }
     </style></head>""",
 )
