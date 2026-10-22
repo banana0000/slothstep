@@ -121,6 +121,25 @@ def make_plan(task: str, model: str = MODEL, ollama_url: str = OLLAMA_URL) -> li
     return plan
 
 
+def model_status() -> tuple[str, str]:
+    """Return (badge colour, label) describing whether the model server is up."""
+    if DEMO_MODE:
+        return "warning", "Demo mode · sample plans, no model"
+    if LLM_BASE_URL:
+        url, name = f"{LLM_BASE_URL}/models", "Hosted model"
+    else:
+        url, name = f"{OLLAMA_URL.rstrip('/')}/api/tags", "Ollama"
+    request = Request(url, headers={"Authorization": f"Bearer {LLM_API_KEY}"})
+    try:
+        with urlopen(request, timeout=3):
+            pass
+    except HTTPError:
+        pass  # the server answered, so it is up
+    except (URLError, TimeoutError, OSError):
+        return "danger", f"{name} is not running"
+    return "success", f"{name} is running · {MODEL}"
+
+
 def step_card(index: int, step: dict) -> dbc.Card:
     first = index == 1
     return dbc.Card(
@@ -200,6 +219,13 @@ app.layout = dbc.Container(
             ],
             className="hero text-center pt-5 pb-3",
         ),
+        html.Div(
+            [
+                dbc.Badge(id="status", pill=True, className="fs-6 fw-normal"),
+                dcc.Interval(id="status-tick", interval=15_000),
+            ],
+            className="text-center mb-3",
+        ),
         dbc.Card(
             dbc.CardBody(
                 [
@@ -237,15 +263,20 @@ app.layout = dbc.Container(
             className="main-card shadow mb-4",
         ),
         dcc.Loading(html.Div(id="result"), type="dot", color="#3a9d5d"),
-        html.Footer(
-            "Demo mode: sample plans, no live model. Run it with Ollama for the real thing."
-            if DEMO_MODE
-            else f"Model: {MODEL} · open weights",
-            className="text-center text-muted small py-4",
-        ),
+        html.Div(className="pb-5"),
     ],
     style={"maxWidth": "720px"},
 )
+
+
+@app.callback(
+    Output("status", "children"),
+    Output("status", "color"),
+    Input("status-tick", "n_intervals"),
+)
+def update_status(_n):
+    color, label = model_status()
+    return label, color
 
 
 @app.callback(
