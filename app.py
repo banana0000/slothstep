@@ -24,7 +24,7 @@ def make_plan(task: str, model: str = MODEL, ollama_url: str = OLLAMA_URL) -> li
         "are procrastinating on. Break it into exactly 3 short steps to do "
         "in order. The first step must be startable right now and take at "
         "most 2 minutes. Keep time estimates realistic and do not invent "
-        "missing details. Reply only in this JSON format: "
+        "missing details. Always write the steps in English, even if the task is in another language. Reply only in this JSON format: "
         '{"steps":[{"action":"concrete step","minutes":2},'
         '{"action":"next step","minutes":5},'
         '{"action":"final step","minutes":10}]}'
