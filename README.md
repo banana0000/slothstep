@@ -2,7 +2,7 @@
 
 Describe a task you keep putting off and get three tiny, realistic steps. The first one takes two minutes or less.
 
-Built with Dash + dash-bootstrap-components and an open-weight model (Gemma 3) served by Ollama.
+Built with Dash + dash-mantine-components and an open-weight model (Gemma 3) served by Ollama.
 
 ## Run locally
 

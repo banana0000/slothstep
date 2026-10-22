@@ -6,7 +6,7 @@ from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 import dash
-import dash_bootstrap_components as dbc
+import dash_mantine_components as dmc
 from dash import Input, Output, State, dcc, html
 
 MODEL = os.environ.get("OLLAMA_MODEL") or "gemma3:4b"
@@ -140,157 +140,200 @@ def model_status() -> tuple[str, str]:
     return "success", f"{name} is running · {MODEL}"
 
 
-def step_card(index: int, step: dict) -> dbc.Card:
+GRADIENT = {"from": "pink", "to": "blue", "deg": 90}
+GRADIENT_REV = {"from": "blue", "to": "pink", "deg": 90}
+
+
+def step_card(index: int, step: dict) -> dmc.Paper:
     first = index == 1
-    return dbc.Card(
-        dbc.CardBody(
-            dbc.Row(
-                [
-                    dbc.Col(
-                        html.Div(str(index), className="step-number"),
-                        width="auto",
-                    ),
-                    dbc.Col(
-                        [
-                            dbc.Checkbox(
-                                id={"type": "done", "index": index},
-                                label=step["action"],
-                                className="step-label",
-                            ),
-                            html.Small(
-                                "Start here – this is all you need to do right now."
-                                if first
-                                else "Once the previous one is done.",
-                                className="text-muted",
-                            ),
-                        ]
-                    ),
-                    dbc.Col(
-                        dbc.Badge(
-                            f"~{step['minutes']} min",
-                            pill=True,
-                            color="success" if first else "secondary",
-                            className="fs-6",
+    return dmc.Paper(
+        dmc.Group(
+            [
+                dmc.ThemeIcon(
+                    str(index),
+                    size=52,
+                    radius="xl",
+                    variant="gradient",
+                    gradient=GRADIENT,
+                    style={"fontSize": "1.3rem", "fontWeight": 700},
+                ),
+                dmc.Stack(
+                    [
+                        dmc.Group(
+                            [
+                                dmc.Checkbox(
+                                    id={"type": "done", "index": index}, size="md", radius="md"
+                                ),
+                                dmc.Text(
+                                    step["action"],
+                                    id={"type": "txt", "index": index},
+                                    size="xl",
+                                    fw=500,
+                                ),
+                            ],
+                            wrap="nowrap",
+                            align="flex-start",
                         ),
-                        width="auto",
-                    ),
-                ],
-                align="center",
-                className="g-3",
-            )
+                        dmc.Text(
+                            "Start here – this is all you need to do right now."
+                            if first
+                            else "Once the previous one is done.",
+                            size="sm",
+                            c="dimmed",
+                        ),
+                    ],
+                    gap=4,
+                    style={"flex": 1},
+                ),
+                dmc.Badge(
+                    f"~{step['minutes']} min",
+                    size="xl",
+                    radius="xl",
+                    variant="gradient" if first else "light",
+                    gradient=GRADIENT,
+                    color="blue",
+                ),
+            ],
+            wrap="nowrap",
+            align="center",
         ),
-        className="mb-3 step-card shadow-sm" + (" step-first" if first else ""),
+        withBorder=True,
+        shadow="sm",
+        radius=28,
+        p="lg",
+        className="step-card",
     )
 
 
-app = dash.Dash(
-    __name__,
-    external_stylesheets=[dbc.themes.LUX, dbc.icons.BOOTSTRAP],
-    title="Slothstep – tiny steps for big tasks",
-)
+app = dash.Dash(__name__, title="Slothstep – tiny steps for big tasks")
 
-app.index_string = app.index_string.replace("<html>", '<html data-bs-theme="dark">').replace(
+app.index_string = app.index_string.replace(
     "</head>",
     """<style>
-    html { font-size: 20px; }
-    body {
-        background: linear-gradient(135deg, #f97316, #10b981);
-        background-size: 300% 300%; animation: drift 18s ease infinite; min-height: 100vh;
-    }
-    @keyframes drift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-    .hero h1 { font-weight: 800; font-size: 3.8rem;
-        background: linear-gradient(90deg, #f97316, #10b981);
-        -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .main-card { border: 0; border-radius: 1.25rem; background: rgba(30,30,34,.85); color: #f1f1f1;
-        backdrop-filter: blur(8px); }
-    .btn { border: 0 !important; color: #fff !important; font-weight: 600;
-        background: linear-gradient(90deg, #f97316, #10b981) !important;
-        background-size: 200% 100% !important; transition: background-position .4s, transform .15s; }
-    .btn:hover { background-position: 100% 0 !important; transform: translateY(-1px); }
-    .example-btn { white-space: normal; text-align: left; font-weight: 500;
-        background: linear-gradient(90deg, #f97316, #10b981) !important;
-        background-size: 200% 100% !important; }
-    .step-card { border: 0; border-radius: 1rem; background: rgba(34,34,40,.92); color: #f1f1f1;
-        transition: transform .15s, box-shadow .15s; }
-    .step-card:hover { transform: translateY(-3px); box-shadow: 0 .6rem 1.2rem rgba(249,115,22,.25) !important; }
-    .step-first { border-left: 6px solid #f97316; }
-    .step-number { width: 2.6rem; height: 2.6rem; border-radius: 50%; color: #fff;
-        display: flex; align-items: center; justify-content: center; font-weight: 700;
-        background: linear-gradient(135deg, #f97316, #10b981); }
-    .step-label { font-size: 1.35rem; }
-    .lead { font-size: 1.4rem; }
-    textarea { font-size: 1.3rem !important; background: #16161a !important; color: #f1f1f1 !important; border: 1px solid #3a3a44 !important; }
-    textarea::placeholder { color: #8d8d99 !important; }
-    .text-muted { color: #a5a5b0 !important; }
-    .hero .lead { color: #c9c9d1 !important; }
-    .form-check-input { background-color: #2a2a31; border-color: #5a5a66; }
-    .form-check-input:checked { background-color: #10b981; border-color: #10b981; }
-    body, h4 { color: #f1f1f1; }
+    html[data-mantine-color-scheme="light"] body
+        { background: linear-gradient(135deg, #ffe4f1, #e3efff) fixed !important; }
+    html[data-mantine-color-scheme="dark"] body
+        { background: linear-gradient(135deg, #1a0f18, #0e1424) fixed !important; }
+    .step-card { transition: transform .15s, box-shadow .15s; }
+    .step-card:hover { transform: translateY(-3px); box-shadow: 0 .8rem 1.6rem rgba(236,72,153,.25); }
     </style></head>""",
 )
 
-app.layout = dbc.Container(
-    [
-        html.Div(
+app.layout = dmc.MantineProvider(
+    id="provider",
+    forceColorScheme="light",
+    theme={
+        "primaryColor": "pink",
+        "defaultRadius": "xl",
+        "fontFamily": "Inter, 'Segoe UI', system-ui, sans-serif",
+    },
+    children=[
+        dcc.Store(id="scheme", storage_type="local", data="light"),
+        dmc.Container(
             [
-                html.Div("🦥", style={"fontSize": "4rem"}),
-                html.H1("Slothstep"),
-                html.P(
-                    "Describe what you keep putting off and get three tiny steps. "
-                    "Powered by an open-weight model – no closed API.",
-                    className="lead text-muted",
+                dmc.Group(
+                    dmc.ActionIcon(
+                        "🌙",
+                        id="toggle",
+                        variant="light",
+                        color="pink",
+                        size="xl",
+                        radius="xl",
+                        style={"fontSize": "1.4rem"},
+                    ),
+                    justify="flex-end",
+                    pt="md",
                 ),
-            ],
-            className="hero text-center pt-5 pb-3",
-        ),
-        html.Div(
-            [
-                dbc.Badge(id="status", pill=True, className="fs-6 fw-normal"),
-                dcc.Interval(id="status-tick", interval=15_000),
-            ],
-            className="text-center mb-3",
-        ),
-        dbc.Card(
-            dbc.CardBody(
-                [
-                    dbc.Textarea(
-                        id="task",
-                        placeholder="What are you putting off?",
-                        size="lg",
-                        rows=3,
-                        className="mb-3",
-                    ),
-                    dbc.Button(
-                        [html.I(className="bi bi-magic me-2"), "Break it down for me"],
-                        id="go",
-                        color="success",
-                        size="lg",
-                        className="w-100",
-                    ),
-                    html.Div(
+                dmc.Stack(
+                    [
+                        dmc.Text("🦥", ta="center", style={"fontSize": "4.5rem", "lineHeight": 1}),
+                        dmc.Text(
+                            "Slothstep",
+                            ta="center",
+                            variant="gradient",
+                            gradient=GRADIENT,
+                            fw=900,
+                            style={"fontSize": "4rem", "lineHeight": 1.1},
+                        ),
+                        dmc.Text(
+                            "Describe what you keep putting off and get three tiny steps. "
+                            "Powered by an open-weight model – no closed API.",
+                            ta="center",
+                            c="dimmed",
+                            size="xl",
+                        ),
+                        dmc.Center(dmc.Badge(id="status", size="xl", radius="xl", variant="light")),
+                        dcc.Interval(id="status-tick", interval=15_000),
+                    ],
+                    gap="sm",
+                    pb="lg",
+                ),
+                dmc.Paper(
+                    dmc.Stack(
                         [
-                            html.Small("Try one:", className="text-muted d-block mt-3 mb-1"),
-                            *[
-                                dbc.Button(
-                                    text,
-                                    id={"type": "example", "index": i},
-                                    color="light",
-                                    size="sm",
-                                    className="example-btn me-2 mb-2",
-                                )
-                                for i, text in enumerate(EXAMPLES)
-                            ],
-                        ]
+                            dmc.Textarea(
+                                id="task",
+                                placeholder="What are you putting off?",
+                                autosize=True,
+                                minRows=3,
+                                size="xl",
+                                radius="xl",
+                            ),
+                            dmc.Button(
+                                "Break it down for me",
+                                id="go",
+                                size="xl",
+                                radius="xl",
+                                variant="gradient",
+                                gradient=GRADIENT,
+                                fullWidth=True,
+                            ),
+                            dmc.Text("Try one:", size="md", c="dimmed"),
+                            dmc.Group(
+                                [
+                                    dmc.Button(
+                                        text,
+                                        id={"type": "example", "index": i},
+                                        variant="gradient",
+                                        gradient=GRADIENT_REV,
+                                        size="md",
+                                        radius="xl",
+                                        styles={"label": {"whiteSpace": "normal"}},
+                                    )
+                                    for i, text in enumerate(EXAMPLES)
+                                ],
+                                gap="xs",
+                            ),
+                        ],
+                        gap="md",
                     ),
-                ]
-            ),
-            className="main-card shadow mb-4",
+                    withBorder=True,
+                    shadow="lg",
+                    radius=32,
+                    p="xl",
+                    mb="xl",
+                ),
+                dcc.Loading(html.Div(id="result"), type="dot", color="#ec4899"),
+                html.Div(style={"height": "4rem"}),
+            ],
+            size=860,
         ),
-        dcc.Loading(html.Div(id="result"), type="dot", color="#f97316"),
-        html.Div(className="pb-5"),
     ],
-    style={"maxWidth": "820px"},
 )
+
+
+@app.callback(
+    Output("provider", "forceColorScheme"),
+    Output("scheme", "data"),
+    Output("toggle", "children"),
+    Input("toggle", "n_clicks"),
+    State("scheme", "data"),
+)
+def toggle_scheme(n_clicks, scheme):
+    scheme = scheme if scheme in {"light", "dark"} else "light"
+    if n_clicks:
+        scheme = "dark" if scheme == "light" else "light"
+    return scheme, scheme, "☀️" if scheme == "dark" else "🌙"
 
 
 @app.callback(
@@ -300,7 +343,7 @@ app.layout = dbc.Container(
 )
 def update_status(_n):
     color, label = model_status()
-    return label, color
+    return label, {"success": "teal", "warning": "yellow", "danger": "red"}[color]
 
 
 @app.callback(
@@ -324,30 +367,38 @@ def fill_example(_clicks):
 def plan(_n, task):
     task = (task or "").strip()
     if not task:
-        return dbc.Alert("Describe a task and I will turn it into a plan.", color="warning")
+        return dmc.Alert(
+            "Describe a task and I will turn it into a plan.", color="yellow", radius="xl"
+        )
     try:
         steps = make_plan(task)
     except RuntimeError as exc:
-        return dbc.Alert(str(exc), color="danger")
+        return dmc.Alert(str(exc), color="red", title="Something went wrong", radius="xl")
     total = sum(s["minutes"] for s in steps)
-    return [
-        html.Div(
-            [
-                html.H4("Just start with the first tiny step", className="mb-0"),
-                dbc.Badge(f"total ~{total} min", color="dark", pill=True),
-            ],
-            className="d-flex justify-content-between align-items-center mb-3",
-        ),
-        *[step_card(i, s) for i, s in enumerate(steps, start=1)],
-    ]
+    return dmc.Stack(
+        [
+            dmc.Group(
+                [
+                    dmc.Text("Just start with the first tiny step", size="xl", fw=700),
+                    dmc.Badge(
+                        f"total ~{total} min", size="xl", radius="xl", variant="outline", color="blue"
+                    ),
+                ],
+                justify="space-between",
+            ),
+            *[step_card(i, s) for i, s in enumerate(steps, start=1)],
+        ],
+        gap="md",
+    )
 
 
 @app.callback(
-    Output({"type": "done", "index": dash.MATCH}, "className"),
-    Input({"type": "done", "index": dash.MATCH}, "value"),
+    Output({"type": "txt", "index": dash.MATCH}, "td"),
+    Output({"type": "txt", "index": dash.MATCH}, "c"),
+    Input({"type": "done", "index": dash.MATCH}, "checked"),
 )
 def strike_done(done):
-    return "step-label text-decoration-line-through text-muted" if done else "step-label"
+    return ("line-through", "dimmed") if done else (None, None)
 
 
 server = app.server
