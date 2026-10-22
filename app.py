@@ -192,16 +192,31 @@ app = dash.Dash(
 app.index_string = app.index_string.replace(
     "</head>",
     """<style>
-    body { background: linear-gradient(160deg, #eef5ee 0%, #f8f4ec 100%); min-height: 100vh; }
-    .hero h1 { font-weight: 700; }
-    .step-card { border: 0; border-radius: 1rem; transition: transform .15s; }
-    .step-card:hover { transform: translateY(-2px); }
-    .step-first { border-left: 6px solid #3a9d5d; }
-    .step-number { width: 2.6rem; height: 2.6rem; border-radius: 50%; background: #3a9d5d;
-        color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+    body {
+        background: linear-gradient(135deg, #d9f7e8, #cfe8ff 35%, #e9dcff 65%, #ffe0ec);
+        background-size: 300% 300%; animation: drift 18s ease infinite; min-height: 100vh;
+    }
+    @keyframes drift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    .hero h1 { font-weight: 800; font-size: 3.2rem;
+        background: linear-gradient(90deg, #12b886, #3b82f6, #a855f7, #ec4899);
+        -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .main-card { border: 0; border-radius: 1.25rem; background: rgba(255,255,255,.85);
+        backdrop-filter: blur(8px); }
+    #go { border: 0; font-weight: 600;
+        background: linear-gradient(90deg, #12b886, #3b82f6, #a855f7);
+        background-size: 200% 100%; transition: background-position .4s, transform .15s; }
+    #go:hover { background-position: 100% 0; transform: translateY(-1px); }
+    .example-btn { white-space: normal; text-align: left; border: 1px solid #e3e8f0; }
+    .step-card { border: 0; border-radius: 1rem; background: rgba(255,255,255,.9);
+        transition: transform .15s, box-shadow .15s; }
+    .step-card:hover { transform: translateY(-3px); box-shadow: 0 .6rem 1.2rem rgba(80,60,160,.15) !important; }
+    .step-first { border-left: 6px solid #12b886; }
+    .step-number { width: 2.6rem; height: 2.6rem; border-radius: 50%; color: #fff;
+        display: flex; align-items: center; justify-content: center; font-weight: 700;
+        background: linear-gradient(135deg, #12b886, #3b82f6); }
+    .step-card:nth-of-type(2) .step-number { background: linear-gradient(135deg, #3b82f6, #a855f7); }
+    .step-card:nth-of-type(3) .step-number { background: linear-gradient(135deg, #a855f7, #ec4899); }
     .step-label { font-size: 1.1rem; }
-    .main-card { border: 0; border-radius: 1.25rem; }
-    .example-btn { white-space: normal; text-align: left; }
     </style></head>""",
 )
 
@@ -262,7 +277,7 @@ app.layout = dbc.Container(
             ),
             className="main-card shadow mb-4",
         ),
-        dcc.Loading(html.Div(id="result"), type="dot", color="#3a9d5d"),
+        dcc.Loading(html.Div(id="result"), type="dot", color="#7c5cff"),
         html.Div(className="pb-5"),
     ],
     style={"maxWidth": "720px"},
