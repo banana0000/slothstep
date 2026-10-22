@@ -33,7 +33,7 @@ Every step has a realistic time estimate, and you can tick them off as you go. T
 ## How I Built It
 
 - **UI:** [Dash](https://dash.plotly.com/) with [dash-bootstrap-components](https://dash-bootstrap-components.opensource.faculty.ai/) (LUX theme), a single Python file.
-- **Model:** [Gemma 3](https://ai.google.dev/gemma) (4B) running locally through [Ollama](https://ollama.com/). The same code can also talk to any OpenAI-compatible host serving an open-weight model, which is how the free hosted demo works.
+- **Model:** [Gemma 3](https://ai.google.dev/gemma) (4B) running locally through [Ollama](https://ollama.com/). The same code can also talk to any OpenAI-compatible host serving an open-weight model. The free hosted demo runs in a clearly labelled demo mode with sample plans, since a free host cannot run a model.
 - **Reliable output:** the model is asked for JSON only, then the app validates it (exactly three steps, non-empty text, positive integer minutes) and shows a friendly error instead of garbage if the model misbehaves.
 - **Prompting:** low temperature, a hard limit of two minutes for step one, and an explicit "do not invent missing details" instruction so it doesn't hallucinate a kitchen you don't have.
 - **Deploy:** a `render.yaml` Blueprint for a free Render web service.
