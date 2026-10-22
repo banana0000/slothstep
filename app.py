@@ -199,7 +199,7 @@ def step_card(index: int, step: dict) -> dmc.Paper:
         ),
         withBorder=True,
         shadow="sm",
-        radius=28,
+        radius=0,
         p="lg",
         className="step-card",
     )
@@ -214,7 +214,8 @@ app.index_string = app.index_string.replace(
         { background: linear-gradient(135deg, #ffe4f1, #e3efff) fixed !important; }
     html[data-mantine-color-scheme="dark"] body
         { background: linear-gradient(135deg, #1a0f18, #0e1424) fixed !important; }
-    .step-card { transition: transform .15s, box-shadow .15s; }
+    .step-card { background: #000 !important; color: #fff !important; border-color: #000 !important;
+        border-radius: 0 !important; transition: transform .15s, box-shadow .15s; }
     .step-card:hover { transform: translateY(-3px); box-shadow: 0 .8rem 1.6rem rgba(236,72,153,.25); }
     </style></head>""",
 )
