@@ -1,19 +1,9 @@
 services:
-  # Open-weight model server (private, only the web app can reach it)
-  - type: pserv
-    name: slothstep-ollama
-    runtime: docker
-    dockerfilePath: ./ollama/Dockerfile
-    dockerContext: ./ollama
-    plan: standard   # 2 GB RAM: enough for gemma3:1b (paid)
-    disk:
-      name: ollama-models
-      mountPath: /root/.ollama
-      sizeGB: 5
-    envVars:
-      - key: OLLAMA_MODEL
-        value: gemma3:1b
-
+  # Free web service running in demo mode (canned plans, no model needed).
+  # To use a real model, set DEMO_MODE to "false" and either point
+  # LLM_BASE_URL / LLM_API_KEY / OLLAMA_MODEL at a hosted open-weight model,
+  # or add a private Ollama service (see ollama/Dockerfile, needs a paid plan)
+  # and set OLLAMA_URL to it.
   - type: web
     name: slothstep
     runtime: python
@@ -21,13 +11,5 @@ services:
     startCommand: gunicorn app:server --timeout 180
     plan: free
     envVars:
-      # Set DEMO_MODE to "true" to serve canned plans without any model.
       - key: DEMO_MODE
-        value: "false"
-      - key: OLLAMA_MODEL
-        value: gemma3:1b
-      - key: OLLAMA_URL
-        fromService:
-          type: pserv
-          name: slothstep-ollama
-          property: hostport
+        value: "true"

@@ -39,5 +39,6 @@ Open http://127.0.0.1:8050.
 
 ## Deploy on Render
 
-`render.yaml` is a Blueprint with a web service and a private Ollama service (`gemma3:1b`). The Ollama service needs a paid instance (2 GB RAM).
+`render.yaml` is a Blueprint for a free web service running in demo mode (`DEMO_MODE=true`, sample plans).
+For a real model, add a private Ollama service built from `ollama/Dockerfile` (needs a paid instance, 2 GB RAM) and set `OLLAMA_URL`, or use the hosted option below.
 To stay on the free tier, set `DEMO_MODE=true`, or point `LLM_BASE_URL` / `LLM_API_KEY` / `OLLAMA_MODEL` at a hosted open-weight model.

@@ -36,7 +36,7 @@ The free host may take about a minute to wake up on the first visit.
 - **Model:** [Gemma 3](https://ai.google.dev/gemma) (4B) running locally through [Ollama](https://ollama.com/). The same code can also talk to any OpenAI-compatible host serving an open-weight model. The free hosted demo runs in a clearly labelled demo mode with sample plans, since a free host cannot run a model.
 - **Reliable output:** the model is asked for JSON only, then the app validates it (exactly three steps, non-empty text, positive integer minutes) and shows a friendly error instead of garbage if the model misbehaves.
 - **Prompting:** low temperature, a hard limit of two minutes for step one, and an explicit "do not invent missing details" instruction so it doesn't hallucinate a kitchen you don't have.
-- **Deploy:** a `render.yaml` Blueprint with a web service and a private Ollama service. The Ollama service needs a paid instance, so the free demo runs with `DEMO_MODE=true`.
+- **Deploy:** a `render.yaml` Blueprint for a free Render web service running with `DEMO_MODE=true`. A real model needs a private Ollama service on a paid instance, which the repo's `ollama/Dockerfile` supports.
 
 ## Why Open Innovation Matters Here
 
