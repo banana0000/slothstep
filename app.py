@@ -179,7 +179,12 @@ def step_card(index: int, step: dict) -> dmc.Paper:
                             if first
                             else "Once the previous one is done.",
                             size="sm",
-                            c="dimmed",
+                            c="gray.4",
+                            style={
+                                "background": "#000",
+                                "padding": "2px 10px",
+                                "width": "fit-content",
+                            },
                         ),
                     ],
                     gap=4,
@@ -286,8 +291,8 @@ app.layout = dmc.MantineProvider(
                                     id="go",
                                     size="xl",
                                     radius=999,
-                                    color="pink",
-                                    variant="filled",
+                                    variant="gradient",
+                                    gradient={"from": "pink", "to": "black", "deg": 90},
                                 )
                             ),
                             dmc.Text("Try one:", size="md", c="dimmed"),

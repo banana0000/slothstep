@@ -22,21 +22,21 @@ Every step has a realistic time estimate, and you can tick them off as you go. T
 
 ## Demo
 
-<!-- TODO: add the Render link, a screenshot or GIF, and the GitHub repo embed -->
+- Live app (demo mode with sample plans, because a free host cannot run a model): https://slothstep.onrender.com
+- Real thing: clone the repo, `ollama pull gemma3:4b`, `pip install -r requirements.txt`, `python app.py`
+- Code: {% embed https://github.com/banana0000/slothstep %}
 
-- Live app (demo mode with sample plans, because a free host cannot run a model): _add Render URL here_
-- Real thing: clone the repo, `ollama pull gemma3:4b`, `python app.py`
-- Code: https://github.com/banana0000/slothstep
+<!-- Add a screenshot or GIF here before publishing: ![Slothstep screenshot](IMAGE_URL) -->
 
-![Slothstep screenshot](_add screenshot_)
+The free host may take about a minute to wake up on the first visit.
 
 ## How I Built It
 
-- **UI:** [Dash](https://dash.plotly.com/) with [dash-mantine-components](https://dash-bootstrap-components.opensource.faculty.ai/) (light and dark mode), a single Python file.
+- **UI:** [Dash](https://dash.plotly.com/) with [Dash Mantine Components](https://www.dash-mantine-components.com/) (light and dark mode), a single Python file.
 - **Model:** [Gemma 3](https://ai.google.dev/gemma) (4B) running locally through [Ollama](https://ollama.com/). The same code can also talk to any OpenAI-compatible host serving an open-weight model. The free hosted demo runs in a clearly labelled demo mode with sample plans, since a free host cannot run a model.
 - **Reliable output:** the model is asked for JSON only, then the app validates it (exactly three steps, non-empty text, positive integer minutes) and shows a friendly error instead of garbage if the model misbehaves.
 - **Prompting:** low temperature, a hard limit of two minutes for step one, and an explicit "do not invent missing details" instruction so it doesn't hallucinate a kitchen you don't have.
-- **Deploy:** a `render.yaml` Blueprint for a free Render web service.
+- **Deploy:** a `render.yaml` Blueprint with a web service and a private Ollama service. The Ollama service needs a paid instance, so the free demo runs with `DEMO_MODE=true`.
 
 ## Why Open Innovation Matters Here
 
@@ -53,7 +53,5 @@ A closed model might write slightly nicer sentences. But for a three-line plan, 
 
 - **Best Use of Gemma:** Gemma 3 is the model at the core of the app.
 - **Best Use of Render:** the app is deployed from a `render.yaml` Blueprint.
-
-<!-- Delete a category above if you don't end up using it. -->
 
 Thanks for reading, and please take it slow. 🦥
