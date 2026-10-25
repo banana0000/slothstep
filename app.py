@@ -152,7 +152,7 @@ def step_card(index: int, step: dict) -> dmc.Paper:
                 dmc.ThemeIcon(
                     str(index),
                     size=52,
-                    radius="xl",
+                    radius=0,
                     variant="gradient",
                     gradient=GRADIENT,
                     style={"fontSize": "1.3rem", "fontWeight": 700},
@@ -162,7 +162,7 @@ def step_card(index: int, step: dict) -> dmc.Paper:
                         dmc.Group(
                             [
                                 dmc.Checkbox(
-                                    id={"type": "done", "index": index}, size="md", radius="md"
+                                    id={"type": "done", "index": index}, size="md", radius=0
                                 ),
                                 dmc.Text(
                                     step["action"],
@@ -193,7 +193,7 @@ def step_card(index: int, step: dict) -> dmc.Paper:
                 dmc.Badge(
                     f"~{step['minutes']} min",
                     size="xl",
-                    radius="xl",
+                    radius=0,
                     variant="gradient" if first else "light",
                     gradient=GRADIENT,
                     color="blue",
@@ -210,20 +210,7 @@ def step_card(index: int, step: dict) -> dmc.Paper:
     )
 
 
-app = dash.Dash(__name__, title="Slothstep – tiny steps for big tasks")
-
-app.index_string = app.index_string.replace(
-    "</head>",
-    """<style>
-    html[data-mantine-color-scheme="light"] body
-        { background: linear-gradient(135deg, #ffe4f1, #e3efff) fixed !important; }
-    html[data-mantine-color-scheme="dark"] body
-        { background: linear-gradient(135deg, #1a0f18, #0e1424) fixed !important; }
-    .step-card { background: #2563eb !important; color: #fff !important; border-color: #2563eb !important;
-        border-radius: 0 !important; transition: transform .15s, box-shadow .15s; }
-    .step-card:hover { transform: translateY(-3px); box-shadow: 0 .8rem 1.6rem rgba(236,72,153,.25); }
-    </style></head>""",
-)
+app = dash.Dash(__name__, title="Slothstep – tiny steps for big tasks")  # CSS: assets/style.css
 
 app.layout = dmc.MantineProvider(
     id="provider",
@@ -275,52 +262,61 @@ app.layout = dmc.MantineProvider(
                     pb="lg",
                 ),
                 dmc.Paper(
-                    dmc.Stack(
-                        [
-                            dmc.Textarea(
-                                id="task",
-                                placeholder="What are you putting off?",
-                                autosize=True,
-                                minRows=3,
-                                size="xl",
-                                radius="xl",
-                            ),
-                            dmc.Center(
-                                dmc.Button(
-                                    "Break it down for me",
-                                    id="go",
+                    [
+                        dmc.Stack(
+                            [
+                                dmc.Textarea(
+                                    id="task",
+                                    placeholder="What are you putting off?",
+                                    autosize=True,
+                                    minRows=3,
                                     size="xl",
-                                    radius=999,
-                                    variant="gradient",
-                                    gradient={"from": "pink", "to": "black", "deg": 90},
-                                )
-                            ),
-                            dmc.Text("Try one:", size="md", c="dimmed"),
-                            dmc.Group(
-                                [
+                                    radius="xl",
+                                ),
+                                dmc.Center(
                                     dmc.Button(
-                                        text,
-                                        id={"type": "example", "index": i},
-                                        variant="filled",
-                                        color="pink",
-                                        size="md",
-                                        radius="xl",
-                                        styles={
-                                            "root": {"border": "none"},
-                                            "label": {"whiteSpace": "normal"},
-                                        },
+                                        "Break it down for me",
+                                        id="go",
+                                        size="xl",
+                                        radius=999,
+                                        variant="gradient",
+                                        gradient={"from": "pink", "to": "black", "deg": 90},
                                     )
-                                    for i, text in enumerate(EXAMPLES)
-                                ],
-                                gap="xs",
-                            ),
-                        ],
-                        gap="md",
-                    ),
+                                ),
+                            ],
+                            gap="md",
+                            p="xl",
+                        ),
+                        dmc.Stack(
+                            [
+                                dmc.Text("Try one:", size="md", c="gray.4"),
+                                dmc.Group(
+                                    [
+                                        dmc.Button(
+                                            text,
+                                            id={"type": "example", "index": i},
+                                            variant="filled",
+                                            color="pink",
+                                            size="md",
+                                            radius="xl",
+                                            styles={
+                                                "root": {"border": "none"},
+                                                "label": {"whiteSpace": "normal"},
+                                            },
+                                        )
+                                        for i, text in enumerate(EXAMPLES)
+                                    ],
+                                    gap="xs",
+                                ),
+                            ],
+                            gap="md",
+                            p="xl",
+                            style={"background": "#000"},
+                        ),
+                    ],
                     withBorder=True,
                     shadow="lg",
                     radius=32,
-                    p="xl",
                     mb="xl",
                 ),
                 dcc.Loading(html.Div(id="result"), type="dot", color="#ec4899"),
@@ -378,12 +374,12 @@ def plan(_n, task):
     task = (task or "").strip()
     if not task:
         return dmc.Alert(
-            "Describe a task and I will turn it into a plan.", color="yellow", radius="xl"
+            "Describe a task and I will turn it into a plan.", color="yellow", radius=0
         )
     try:
         steps = make_plan(task)
     except RuntimeError as exc:
-        return dmc.Alert(str(exc), color="red", title="Something went wrong", radius="xl")
+        return dmc.Alert(str(exc), color="red", title="Something went wrong", radius=0)
     total = sum(s["minutes"] for s in steps)
     return dmc.Stack(
         [
@@ -391,7 +387,7 @@ def plan(_n, task):
                 [
                     dmc.Text("Just start with the first tiny step", size="xl", fw=700),
                     dmc.Badge(
-                        f"total ~{total} min", size="xl", radius="xl", variant="outline", color="blue"
+                        f"total ~{total} min", size="xl", radius=0, variant="outline", color="blue"
                     ),
                 ],
                 justify="space-between",
